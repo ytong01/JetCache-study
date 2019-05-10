@@ -1,0 +1,24 @@
+server:
+  port: 8080
+
+jetcache:
+  statIntervalMinutes: 15
+  areaInCacheName: false
+  local:
+    default:
+      type: linkedhashmap
+      keyConvertor: fastjson
+  remote:
+    default:
+      type: redis
+      keyConvertor: fastjson
+      valueEncoder: java
+      valueDecoder: java
+      poolConfig:
+        minIdle: 5
+        maxIdle: 20
+        matTotal: 20
+        datasource: 4
+      host: 10.128.97.61
+      port: 6379
+      password: 123456
