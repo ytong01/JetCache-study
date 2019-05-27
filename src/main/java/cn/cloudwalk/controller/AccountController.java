@@ -2,10 +2,8 @@ package cn.cloudwalk.controller;
 
 import cn.cloudwalk.Service.MultiThreadService;
 import cn.cloudwalk.model.Account;
-import com.alicp.jetcache.anno.CacheInvalidate;
-import com.alicp.jetcache.anno.CacheType;
-import com.alicp.jetcache.anno.CacheUpdate;
-import com.alicp.jetcache.anno.Cached;
+import com.alicp.jetcache.Cache;
+import com.alicp.jetcache.anno.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,13 +14,21 @@ public class AccountController {
     @Autowired
     private MultiThreadService multiThreadService;
 
+    @CreateCache(name = "account", cacheType = CacheType.BOTH)
+    public Cache<String, Account> cache;
+
     @RequestMapping(value = "/get/{id}", method = RequestMethod.GET)
-    @Cached(name = "account:", key = "#id",expire = 60 * 30, cacheType = CacheType.BOTH)
+//    @Cached(name = "account:", key = "#id",expire = 60 * 30, cacheType = CacheType.BOTH)
     public Account getAccount(@PathVariable String id) {
-        Account account = new Account();
+        Account account = cache.get(id);
+        if (account != null) {
+            return account;
+        }
+        account = new Account();
         account.setId(id);
         account.setUsername("rose");
         account.setPhone("110");
+        cache.put(id, account);
         return account;
     }
 
@@ -50,4 +56,10 @@ public class AccountController {
         }
         return "success";
     }
+
+    @GetMapping("/test")
+    public String test() {
+        return "test";
+    }
+
 }

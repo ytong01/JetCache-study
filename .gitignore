@@ -8,7 +8,7 @@
 
 ### IntelliJ
 out/
-.idea/
+**/.idea/
 **/*.iml
 .idea_modules/
 
